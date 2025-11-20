@@ -3,8 +3,19 @@ from app import models
 import random
 import numpy as np
 from app.database import SessionLocal, engine
-from typing import List
+from typing import List, Dict, Any
 from datetime import date, datetime, timedelta
+
+import pandas as pd
+
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -186,3 +197,142 @@ def seed_database(db: Session, n_vehicles: int = 250) -> None:
             db.add(sensor)
 
     db.commit()
+
+# -----------------------------
+# ML training utilities
+# -----------------------------
+
+FEATURE_NUMERIC = [
+    "model_year",
+    "mileage",
+    "age_months",
+    "avg_engine_temp",
+    "avg_vibration",
+    "services_last_12m",
+]
+
+FEATURE_CATEGORICAL = [
+    "model",
+    "supplier_code",
+    "plant_code",
+    "region",
+]
+
+DEFAULT_MODEL_NAME = "decision_tree"
+MODEL_REGISTRY: Dict[str, Dict[str, Any]] = {}
+
+
+def build_training_dataframe(db: Session) -> pd.DataFrame:
+    vehicles = db.query(models.Vehicle).all()
+    rows = []
+    for v in vehicles:
+        rows.append(
+            {
+                "model": v.model,
+                "model_year": v.model_year,
+                "mileage": v.mileage,
+                "age_months": v.age_months,
+                "avg_engine_temp": v.avg_engine_temp,
+                "avg_vibration": v.avg_vibration,
+                "services_last_12m": v.services_last_12m,
+                "supplier_code": v.supplier_code,
+                "plant_code": v.plant_code,
+                "region": v.region,
+                "failure_label": int(v.failure_label),
+            }
+        )
+    df = pd.DataFrame(rows)
+    return df
+
+
+def train_models_from_db(db: Session) -> Dict[str, Dict[str, Any]]:
+    df = build_training_dataframe(db)
+    if df.empty:
+        raise RuntimeError("No data to train on.")
+
+    X = df[FEATURE_NUMERIC + FEATURE_CATEGORICAL]
+    y = df["failure_label"].astype(int)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.25, random_state=42, stratify=y
+    )
+
+    models: Dict[str, Dict[str, Any]] = {}
+
+    configs = [
+        (
+            "decision_tree",
+            DecisionTreeClassifier(max_depth=5, random_state=42),
+            "DecisionTree",
+            "Fast, interpretable baseline model",
+        ),
+        (
+            "svm",
+            SVC(kernel="rbf", probability=True, class_weight="balanced", random_state=42),
+            "SVM",
+            "Margin-based model for complex boundaries",
+        ),
+        (
+            "neural_net",
+            MLPClassifier(
+                hidden_layer_sizes=(32, 16),
+                max_iter=500,
+                random_state=42,
+            ),
+            "NeuralNet",
+            "Shallow neural network for non-linear patterns",
+        ),
+    ]
+
+    for name, estimator, model_type, desc in configs:
+        preprocessor = ColumnTransformer(
+            transformers=[
+                ("num", StandardScaler(), FEATURE_NUMERIC),
+                ("cat", OneHotEncoder(handle_unknown="ignore"), FEATURE_CATEGORICAL),
+            ]
+        )
+        pipe = Pipeline(steps=[("prep", preprocessor), ("est", estimator)])
+        pipe.fit(X_train, y_train)
+        y_proba = pipe.predict_proba(X_test)[:, 1]
+        auc = float(roc_auc_score(y_test, y_proba))
+
+        models[name] = {
+            "pipeline": pipe,
+            "auc": auc,
+            "type": model_type,
+            "description": desc,
+        }
+
+    return models
+
+
+def predict_vehicle_risk(vehicle: models.Vehicle, model_name: str) -> float:
+    if model_name not in MODEL_REGISTRY:
+        model_name = DEFAULT_MODEL_NAME
+    pipe: Pipeline = MODEL_REGISTRY[model_name]["pipeline"]
+    row = pd.DataFrame(
+        [
+            {
+                "model": vehicle.model,
+                "model_year": vehicle.model_year,
+                "mileage": vehicle.mileage,
+                "age_months": vehicle.age_months,
+                "avg_engine_temp": vehicle.avg_engine_temp,
+                "avg_vibration": vehicle.avg_vibration,
+                "services_last_12m": vehicle.services_last_12m,
+                "supplier_code": vehicle.supplier_code,
+                "plant_code": vehicle.plant_code,
+                "region": vehicle.region,
+            }
+        ]
+    )
+    proba = pipe.predict_proba(row)[:, 1][0]
+    return float(proba)
+
+
+def bucket_from_risk(score: float) -> str:
+    if score >= 0.7:
+        return "High"
+    if score >= 0.4:
+        return "Medium"
+    return "Low"
