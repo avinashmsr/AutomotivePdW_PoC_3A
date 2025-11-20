@@ -307,8 +307,16 @@ def train_models_from_db(db: Session) -> Dict[str, Dict[str, Any]]:
 
 
 def predict_vehicle_risk(vehicle: models.Vehicle, model_name: str) -> float:
+    # Extra safety: fail early if initialize_models() was never called
+    if not MODEL_REGISTRY:
+        raise RuntimeError(
+            "MODEL_REGISTRY is empty. Did you call initialize_models() on startup?"
+        )
+
     if model_name not in MODEL_REGISTRY:
+        # fall back to default if unknown model name comes from query
         model_name = DEFAULT_MODEL_NAME
+
     pipe: Pipeline = MODEL_REGISTRY[model_name]["pipeline"]
     row = pd.DataFrame(
         [
@@ -328,3 +336,29 @@ def predict_vehicle_risk(vehicle: models.Vehicle, model_name: str) -> float:
     )
     proba = pipe.predict_proba(row)[:, 1][0]
     return float(proba)
+
+def bucket_from_risk(score: float) -> str:
+    if score >= 0.7:
+        return "High"
+    if score >= 0.4:
+        return "Medium"
+    return "Low"
+
+def initialize_models() -> None:
+    """
+    Create tables, seed synthetic data if needed, and train all ML models.
+    Populates the global MODEL_REGISTRY.
+    """
+    models.Base.metadata.create_all(bind=engine)
+
+    db: Session = SessionLocal()
+    try:
+        # Seed synthetic data only if empty
+        seed_database(db)
+
+        global MODEL_REGISTRY
+        MODEL_REGISTRY = train_models_from_db(db)
+
+        print("Trained models:", {k: v["auc"] for k, v in MODEL_REGISTRY.items()})
+    finally:
+        db.close()

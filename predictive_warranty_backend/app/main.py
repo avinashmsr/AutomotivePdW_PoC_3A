@@ -2,7 +2,13 @@ from fastapi import FastAPI, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from .database import SessionLocal, engine, Base, get_db
-from .generate_synthetic_data_and_train import seed_database, train_models_from_db, DEFAULT_MODEL_NAME, predict_vehicle_risk
+from .generate_synthetic_data_and_train import (
+    initialize_models,
+    DEFAULT_MODEL_NAME,
+    MODEL_REGISTRY,
+    predict_vehicle_risk,
+    bucket_from_risk,
+)
 from .schemas import ModelInfo, VehicleSummary, VehicleDetail, ServiceRecordOut
 from .models import Vehicle
 from sqlalchemy.orm import Session
@@ -32,16 +38,9 @@ app.add_middleware(
 
 
 @app.on_event("startup")
-def on_startup():
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
-    try:
-        seed_database(db)
-        global MODEL_REGISTRY
-        MODEL_REGISTRY = train_models_from_db(db)
-        print("Trained models:", {k: v["auc"] for k, v in MODEL_REGISTRY.items()})
-    finally:
-        db.close()
+def on_startup() -> None:
+    # initialize_models() will create tables, seed DB, and train models
+    initialize_models()
 
 
 @app.get("/health")
@@ -147,13 +146,6 @@ def get_vehicle_detail(
     ]
 
     return VehicleDetail(summary=summary, service_history=service_history)
-
-def bucket_from_risk(score: float) -> str:
-    if score >= 0.7:
-        return "High"
-    if score >= 0.4:
-        return "Medium"
-    return "Low"
 
 
 if __name__ == "__main__":
