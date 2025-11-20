@@ -1,0 +1,380 @@
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #0f172a;
+  background-color: #0f172a;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1f2937, #020617 60%);
+}
+
+.app-root {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 16px 20px 32px;
+  background: #020617ee;
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  color: #e5e7eb;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.app-header h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.header-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(30, 64, 175, 0.2);
+  border: 1px solid rgba(129, 140, 248, 0.7);
+  color: #e5e7eb;
+}
+
+.chip-accent {
+  background: rgba(22, 163, 74, 0.2);
+  border-color: rgba(74, 222, 128, 0.8);
+}
+
+.control-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.model-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.model-select select {
+  padding: 4px 8px;
+  background: #020617;
+  color: #e5e7eb;
+  border-radius: 6px;
+  border: 1px solid #4b5563;
+  font-size: 13px;
+}
+
+.model-metadata {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.model-auc strong {
+  color: #e5e7eb;
+}
+
+.error-banner {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fecaca;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.25fr 1.1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.panel {
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.panel-subtitle {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.table-wrapper {
+  border-radius: 10px;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  overflow: hidden;
+  background: radial-gradient(circle at top left, #020617, #020617);
+  flex: 1;
+}
+
+.vehicle-table,
+.service-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.vehicle-table th,
+.vehicle-table td,
+.service-table th,
+.service-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.vehicle-table thead {
+  background: linear-gradient(to right, #111827, #020617);
+}
+
+.vehicle-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.vehicle-table tbody tr:hover {
+  background: rgba(37, 99, 235, 0.2);
+  cursor: pointer;
+}
+
+.row-selected {
+  background: rgba(37, 99, 235, 0.35) !important;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 16px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.loading {
+  padding: 16px;
+  font-size: 13px;
+  color: #e5e7eb;
+}
+
+.risk-badge {
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid transparent;
+}
+
+.risk-high {
+  background: rgba(248, 113, 113, 0.16);
+  border-color: rgba(248, 113, 113, 0.7);
+  color: #fecaca;
+}
+
+.risk-medium {
+  background: rgba(252, 211, 77, 0.1);
+  border-color: rgba(252, 211, 77, 0.7);
+  color: #fef9c3;
+}
+
+.risk-low {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.7);
+  color: #bbf7d0;
+}
+
+.placeholder {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.detail-top {
+  display: grid;
+  grid-template-columns: 1.1fr 1.2fr;
+  gap: 10px;
+}
+
+.risk-gauge-card,
+.drivers-card,
+.service-card {
+  background: radial-gradient(circle at top left, #020617, #020617);
+  border-radius: 10px;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  padding: 8px 10px;
+}
+
+.risk-gauge-card {
+  display: flex;
+  gap: 10px;
+}
+
+.risk-gauge-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: conic-gradient(
+    from 180deg,
+    rgba(239, 68, 68, 0.9) 0deg,
+    rgba(234, 179, 8, 0.9) 140deg,
+    rgba(34, 197, 94, 0.9) 280deg
+  );
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.risk-gauge-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: #020617;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.risk-gauge-percentage {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.risk-gauge-label {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+.risk-gauge-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  justify-content: center;
+}
+
+.risk-gauge-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.risk-gauge-row .label {
+  color: #9ca3af;
+}
+
+.drivers-card h3,
+.service-card h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.drivers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.driver-item {
+  padding: 6px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(55, 65, 81, 0.9);
+}
+
+.driver-item .label {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+.driver-item .value {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.driver-item .hint {
+  display: block;
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.service-table thead {
+  background: linear-gradient(to right, #111827, #020617);
+}
+
+.service-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid transparent;
+}
+
+.badge-warranty {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(96, 165, 250, 0.7);
+  color: #bfdbfe;
+}
+
+.badge-nonwarranty {
+  background: rgba(148, 163, 184, 0.15);
+  border-color: rgba(148, 163, 184, 0.7);
+  color: #e5e7eb;
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .detail-top {
+    grid-template-columns: 1fr;
+  }
+}
