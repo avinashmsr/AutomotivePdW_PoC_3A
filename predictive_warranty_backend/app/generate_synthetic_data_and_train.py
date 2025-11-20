@@ -328,11 +328,3 @@ def predict_vehicle_risk(vehicle: models.Vehicle, model_name: str) -> float:
     )
     proba = pipe.predict_proba(row)[:, 1][0]
     return float(proba)
-
-
-def bucket_from_risk(score: float) -> str:
-    if score >= 0.7:
-        return "High"
-    if score >= 0.4:
-        return "Medium"
-    return "Low"
