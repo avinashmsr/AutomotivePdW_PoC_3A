@@ -10,6 +10,7 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship, Session
+from .database import Base
 
 # -----------------------------
 # ORM models
