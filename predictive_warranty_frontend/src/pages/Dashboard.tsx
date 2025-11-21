@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
+import type {
   ModelInfo,
   VehicleSummary,
   VehicleDetail as VehicleDetailType,

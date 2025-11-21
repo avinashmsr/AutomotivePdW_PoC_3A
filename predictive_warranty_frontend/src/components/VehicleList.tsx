@@ -1,5 +1,5 @@
 import React from "react";
-import { VehicleSummary } from "../types";
+import type { VehicleSummary } from "../types";
 import { riskBadgeClass } from "../utils/uihelper";
 
 interface VehicleListProps {
