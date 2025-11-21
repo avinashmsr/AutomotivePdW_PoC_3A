@@ -101,31 +101,36 @@ const VehicleDetail: React.FC<VehicleDetailProps> = ({
                 <div className="detail-layout">
                     {/* 1. SPEEDOMETER GAUGE CARD */}
                     <div className="risk-gauge-card">
-                        <div className="risk-gauge-circle">
-                            <div className="risk-gauge-inner">
-                                <div
-                                    className={`speedometer-needle ${needleBucketClass}`}
-                                    style={{
-                                        transform: `translate(-50%, -100%) rotate(${needleAngle}deg)`,
-                                    }}
-                                >
-                                    <span className="needle-head" />
-                                </div>
-                                <div className="risk-gauge-center">
-                                    <span className="risk-gauge-percentage">
-                                        {Math.round(safeRiskScore * 100)}%
-                                    </span>
-                                    <span className="risk-gauge-label">Failure risk</span>
+                        <div className="risk-gauge-shell">
+                            <div className="risk-gauge-circle">
+                                <div className="risk-gauge-inner">
+                                    <div
+                                        className={`speedometer-needle ${needleBucketClass}`}
+                                        style={{
+                                            transform: `translate(-50%, -100%) rotate(${needleAngle}deg)`,
+                                        }}
+                                    >
+                                        <span className="needle-head" />
+                                    </div>
+
+                                    {/* % moved to bottom inside circle */}
+                                    <div className="risk-gauge-center">
+                                        <span className="risk-gauge-percentage">
+                                            {Math.round(safeRiskScore * 100)}%
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
+
+                            {/* Label moved outside, below the circle */}
+                            <div className="risk-gauge-caption">Failure risk</div>
                         </div>
+
                         <div className="risk-gauge-meta">
                             <div className="risk-gauge-row">
                                 <span className="label">Risk bucket</span>
                                 <span
-                                    className={riskBadgeClass(
-                                        vehicleDetail.summary.risk_bucket
-                                    )}
+                                    className={riskBadgeClass(vehicleDetail.summary.risk_bucket)}
                                 >
                                     {vehicleDetail.summary.risk_bucket}
                                 </span>
@@ -137,8 +142,7 @@ const VehicleDetail: React.FC<VehicleDetailProps> = ({
                             <div className="risk-gauge-row">
                                 <span className="label">Model / Year</span>
                                 <span>
-                                    {vehicleDetail.summary.model} ·{" "}
-                                    {vehicleDetail.summary.model_year}
+                                    {vehicleDetail.summary.model} · {vehicleDetail.summary.model_year}
                                 </span>
                             </div>
                             <div className="risk-gauge-row">

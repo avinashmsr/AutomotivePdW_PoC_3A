@@ -408,6 +408,24 @@ body.theme-light {
   margin-bottom: 8px;
 }
 
+.risk-gauge-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.risk-gauge-caption {
+  margin-top: 4px;
+  font-size: 10px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.app-root.theme-light .risk-gauge-caption {
+  color: #6b7280;
+}
+
 /* Outer ring with green→amber→red arc */
 .risk-gauge-circle {
   width: 120px;
@@ -441,10 +459,16 @@ body.theme-light {
   background: #f9fafb;
 }
 
-/* Make sure gauge center text is on top of needle */
+/* Center % at bottom inside circle */
 .risk-gauge-center {
-  position: relative;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .risk-gauge-percentage {
@@ -452,9 +476,9 @@ body.theme-light {
   font-weight: 600;
 }
 
+/* No longer used for the caption inside the circle */
 .risk-gauge-label {
-  font-size: 10px;
-  color: #9ca3af;
+  display: none;
 }
 
 .app-root.theme-light .risk-gauge-label {
