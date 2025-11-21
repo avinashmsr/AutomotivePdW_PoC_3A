@@ -401,21 +401,24 @@ body.theme-light {
   border-color: rgba(209, 213, 219, 0.9);
 }
 
-/* Risk gauge */
+/* Risk gauge card */
 .risk-gauge-card {
   display: flex;
   gap: 10px;
+  margin-bottom: 8px;
 }
 
+/* Outer ring with green→amber→red arc */
 .risk-gauge-circle {
-  width: 110px;
-  height: 110px;
+  width: 120px;
+  height: 120px;
   border-radius: 999px;
   background: conic-gradient(
-    from 180deg,
-    rgba(239, 68, 68, 0.9) 0deg,
-    rgba(234, 179, 8, 0.9) 140deg,
-    rgba(34, 197, 94, 0.9) 280deg
+    from 210deg,
+    rgba(34, 197, 94, 0.9) 0deg,
+    rgba(234, 179, 8, 0.95) 140deg,
+    rgba(239, 68, 68, 0.95) 280deg,
+    rgba(34, 197, 94, 0.9) 360deg
   );
   padding: 6px;
   display: flex;
@@ -424,18 +427,28 @@ body.theme-light {
 }
 
 .risk-gauge-inner {
+  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 999px;
   background: #020617;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
 .app-root.theme-light .risk-gauge-inner {
   background: #f9fafb;
+}
+
+/* Center text inside the gauge */
+.risk-gauge-center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .risk-gauge-percentage {
@@ -450,6 +463,49 @@ body.theme-light {
 
 .app-root.theme-light .risk-gauge-label {
   color: #6b7280;
+}
+
+/* Speedometer needle */
+.speedometer-needle {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  width: 3px;
+  height: 52%;
+  transform-origin: bottom center;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+  z-index: 0;
+  transition: transform 0.35s ease-out, background-color 0.25s ease;
+}
+
+.speedometer-needle .needle-head {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: inherit;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Needle color by bucket */
+.needle-low {
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+}
+
+.needle-medium {
+  background: #eab308;
+  box-shadow: 0 0 8px rgba(234, 179, 8, 0.9);
+}
+
+.needle-high {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.9);
 }
 
 .risk-gauge-meta {
@@ -484,19 +540,49 @@ body.theme-light {
 .drivers-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 12px; /* more breathing room */
 }
 
 .driver-item {
-  padding: 6px;
+  padding: 8px;
   border-radius: 8px;
   background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(55, 65, 81, 0.9);
+  min-height: 90px; /* slightly taller cards */
 }
 
 .app-root.theme-light .driver-item {
   background: #f9fafb;
   border-color: rgba(209, 213, 219, 0.9);
+}
+
+/* header row: icon + label */
+.driver-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+/* circular automotive icon pill */
+.driver-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  background: radial-gradient(circle at 30% 30%, #1d4ed8, #020617);
+  color: #e5e7eb;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.8);
+}
+
+.app-root.theme-light .driver-icon {
+  background: radial-gradient(circle at 30% 30%, #bfdbfe, #1d4ed8);
+  color: #f9fafb;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6);
 }
 
 .driver-item .label {
@@ -519,33 +605,6 @@ body.theme-light {
   font-size: 10px;
   color: #6b7280;
   margin-top: 2px;
-}
-
-.driver-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 2px;
-}
-
-.driver-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  background: radial-gradient(circle at 30% 30%, #1d4ed8, #020617);
-  color: #e5e7eb;
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.8);
-}
-
-.app-root.theme-light .driver-icon {
-  background: radial-gradient(circle at 30% 30%, #bfdbfe, #1d4ed8);
-  color: #f9fafb;
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6);
 }
 
 /* Service history badges */
