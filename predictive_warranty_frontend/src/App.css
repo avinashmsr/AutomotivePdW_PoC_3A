@@ -441,14 +441,10 @@ body.theme-light {
   background: #f9fafb;
 }
 
-/* Center text inside the gauge */
+/* Make sure gauge center text is on top of needle */
 .risk-gauge-center {
   position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  z-index: 2;
 }
 
 .risk-gauge-percentage {
@@ -465,24 +461,24 @@ body.theme-light {
   color: #6b7280;
 }
 
-/* Speedometer needle */
+/* Speedometer needle: pivot at the center of the circle */
 .speedometer-needle {
   position: absolute;
-  bottom: 18px;
+  top: 50%;
   left: 50%;
   width: 3px;
-  height: 52%;
-  transform-origin: bottom center;
+  height: 45%;               /* length of the needle */
+  transform-origin: 50% 100%; /* pivot at bottom center */
   border-radius: 999px;
   background: #22c55e;
   box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
-  z-index: 0;
-  transition: transform 0.35s ease-out, background-color 0.25s ease;
+  z-index: 1;                /* under the text but above background */
+  /* no transform here – we set it inline from React */
 }
 
 .speedometer-needle .needle-head {
   position: absolute;
-  top: -7px;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%);
   width: 12px;
